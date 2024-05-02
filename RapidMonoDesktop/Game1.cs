@@ -1,52 +1,142 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
+using RapidMonoDesktop.GameScreens;
+using System;
+using System.Collections.Generic;
 
-namespace RapidMonoDesktop
+namespace RapidMonoDesktop;
+
+public class Game1 : Microsoft.Xna.Framework.Game
 {
-    public class Game1 : Game
+    GraphicsDeviceManager graphics;
+    SpriteBatch spriteBatch;
+
+    //Input
+    public List<GestureSample> gestureSamples = new List<GestureSample>();
+
+    public Game1()
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        graphics = new GraphicsDeviceManager(this);
+        Content.RootDirectory = "Content";
 
-        public Game1()
+        TargetElapsedTime = TimeSpan.FromTicks(333333);
+
+        InactiveSleepTime = TimeSpan.FromSeconds(1);
+
+        ScoresData.CreateDatabase();
+    }
+
+
+    protected override void Initialize()
+    {
+        TouchPanel.EnabledGestures = GestureType.Tap | GestureType.FreeDrag | GestureType.DragComplete | GestureType.Flick | GestureType.DoubleTap;
+
+        base.Initialize();
+    }
+
+    protected override void LoadContent()
+    {
+        spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        GameState.SetGame(this);
+    }
+
+    protected override void UnloadContent()
+    {
+
+    }
+
+    protected override void Update(GameTime gameTime)
+    {
+
+        gestureSamples.Clear();
+
+        while (TouchPanel.IsGestureAvailable)
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            GestureSample gs = TouchPanel.ReadGesture();
+            gestureSamples.Add(gs);
         }
 
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
+        if (gameScreens.Count == 0)
+            PushGameScreen(new Menu());
 
-            base.Initialize();
+        if (popUpScreens.Count > 0)
+        {
+            popUpScreens[popUpScreens.Count - 1].gameTime = gameTime;
+            popUpScreens[popUpScreens.Count - 1].Update();
+        }
+        else
+        {
+            if (gameScreens.Count > 0)
+            {
+                gameScreens[gameScreens.Count - 1].gameTime = gameTime;
+                gameScreens[gameScreens.Count - 1].Update();
+            }
         }
 
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+        base.Update(gameTime);
+    }
+
+    private List<GameScreen> gameScreens = new List<GameScreen>()
+                            , popUpScreens = new List<GameScreen>();
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.Black);
+
+        spriteBatch.Begin();
+        if (gameScreens.Count > 0)
+        {
+            gameScreens[gameScreens.Count - 1].gameTime = gameTime;
+            gameScreens[gameScreens.Count - 1].Draw();
         }
-
-        protected override void Update(GameTime gameTime)
+        foreach (GameScreen popUp in popUpScreens)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
-
-            base.Update(gameTime);
+            popUp.gameTime = gameTime;
+            popUp.Draw();
         }
+        spriteBatch.End();
 
-        protected override void Draw(GameTime gameTime)
+        base.Draw(gameTime);
+    }
+
+    public void PushGameScreen(GameScreen gs)
+    {
+        gs.Game = this;
+        gs.spriteBatch = spriteBatch;
+        gs.Load();
+        gameScreens.Add(gs);
+    }
+
+    public void PopGameScreen()
+    {
+        if (gameScreens.Count > 0)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            gameScreens[gameScreens.Count - 1].gameTime = null;
+            gameScreens[gameScreens.Count - 1].Game = null;
+            gameScreens[gameScreens.Count - 1].spriteBatch = null;
+            gameScreens.RemoveAt(gameScreens.Count - 1);
+        }
+    }
 
-            // TODO: Add your drawing code here
+    public void PushPopUpScreen(GameScreen gs)
+    {
+        gs.Game = this;
+        gs.spriteBatch = spriteBatch;
+        gs.Load();
+        popUpScreens.Add(gs);
+    }
 
-            base.Draw(gameTime);
+    public void PopPopUpScreen()
+    {
+        if (popUpScreens.Count > 0)
+        {
+            popUpScreens[popUpScreens.Count - 1].gameTime = null;
+            popUpScreens[popUpScreens.Count - 1].Game = null;
+            popUpScreens[popUpScreens.Count - 1].spriteBatch = null;
+            popUpScreens.RemoveAt(popUpScreens.Count - 1);
         }
     }
 }
