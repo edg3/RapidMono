@@ -54,6 +54,7 @@ public class ScreenService : IRapidService
     /// </summary>
     public override void Draw()
     {
+        Engine.SpriteBatch.Begin();
         if (_GameScreens.Count > 0)
         {
             if (_GameScreens[_GameScreens.Count - 1].IsLoaded)
@@ -64,6 +65,7 @@ public class ScreenService : IRapidService
             if (_PopupScreens[_PopupScreens.Count - 1].IsLoaded)
                 _PopupScreens[_PopupScreens.Count - 1].Draw();
         }
+        Engine.SpriteBatch.End();
     }
 
     /// <summary>
@@ -74,7 +76,6 @@ public class ScreenService : IRapidService
     {
         if (_GameScreens.Contains(gs))
             return;
-        gs.Engine = this.Engine;
         gs.BeginLoad();
         _GameScreens.Add(gs);
     }
@@ -88,8 +89,9 @@ public class ScreenService : IRapidService
         {
             var gs = _GameScreens[_GameScreens.Count - 1];
             gs.OnPop();
-            gs.Engine = null;
             _GameScreens.Remove(gs);
+
+            if (_GameScreens.Count > 0) _GameScreens.Last().OnPush();
         }
     }
 
@@ -101,7 +103,6 @@ public class ScreenService : IRapidService
     {
         if (_PopupScreens.Contains(gs))
             return;
-        gs.Engine = this.Engine;
         gs.BeginLoad();
         _PopupScreens.Add(gs);
     }
@@ -115,8 +116,9 @@ public class ScreenService : IRapidService
         {
             var gs = _PopupScreens[_PopupScreens.Count - 1];
             gs.OnPop();
-            gs.Engine = null;
             _PopupScreens.Remove(gs);
+
+            if (_GameScreens.Count > 0) _GameScreens.Last().OnPush();
         }
     }
 }

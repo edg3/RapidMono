@@ -8,18 +8,23 @@ namespace RapidMono;
 
 public class RapidEngine
 {
-    public RapidEngine(Game game1, GraphicsDevice graphicsDevice, ContentManager contentManager, IGameScreen initalScreen)
+    public RapidEngine(Game game1, GraphicsDevice graphicsDevice, ContentManager contentManager)
     {
         AddService(new ScreenService(), false);
+        AddService(new ScreenshotService(graphicsDevice), false);
+        AddService(new KeyboardService(), false);
+        AddService(new MouseService(), false);
+        AddService(new GamePadService(), false);
 
         _GraphicsDevice = graphicsDevice;
         _ContentManager = contentManager;
         _SpriteBatch = new SpriteBatch(_GraphicsDevice);
 
-        ServiceOf<ScreenService>().PushScreen(initalScreen);
         _Game = game1;
 
         _RenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+        Engine.Instance = this;
     }
 
     /// <summary>
@@ -39,6 +44,7 @@ public class RapidEngine
     ///    it wont get added.
     /// </summary>
     private List<IRapidService> _Services = new List<IRapidService>();
+    internal List<IRapidService> Services => _Services;
     public T ServiceOf<T>()
     {
         for (int i = 0; i < _Services.Count; i++)

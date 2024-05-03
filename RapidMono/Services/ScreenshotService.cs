@@ -17,14 +17,20 @@ namespace RapidMono.Services;
 
 public class ScreenshotService : IRapidService
 {
-
     public override void Load()
     {
         Engine.OnFinalDraw += new RapidEngine.OnFinalDrawEventHandler(Engine_OnFinalDraw);
-        _RenderTarget = new RenderTarget2D(Engine.GraphicsDevice, 1, 1);
     }
 
     private RenderTarget2D _RenderTarget;
+    private GraphicsDevice _graphicsDevice;
+
+    public ScreenshotService(GraphicsDevice graphicsDevice)
+    {
+        this._graphicsDevice = graphicsDevice;
+        _RenderTarget = new RenderTarget2D(_graphicsDevice, 1, 1);
+    }
+
     void Engine_OnFinalDraw(Microsoft.Xna.Framework.Graphics.RenderTarget2D renderTarget)
     {
         lock (_RenderTarget)

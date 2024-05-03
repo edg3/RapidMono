@@ -30,41 +30,6 @@ public class QuadTreeLeaf
         Parent = parent;
     }
 
-    /* Is Clearning Necessary?
-    public List<IQuadItem> Clear()
-    {
-        return Items;
-    }
-    */
-
-    /* Is Checking if an area intersects something necessary?
-    public bool Query(Rectangle Area)
-    {
-        if (Region.Intersects(Area))
-        {
-            if (Children[0] == null)
-            {
-                for (int i = 0; i < Count; i++)
-                {
-                    if (Items[i].Position.Intersects(Area))
-                        return true;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (Children[i].Query(Area))
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    */
-
     private bool CustomContains(Rectangle a, Rectangle b)
     {
         return (a.Contains(b.Location) ||
@@ -112,7 +77,6 @@ public class QuadTreeLeaf
         {
             if (Children[0] == null)
             {
-                //if (!Items.Contains(toAdd))
                 Items.Add(toAdd);
             }
             else
@@ -150,7 +114,6 @@ public class QuadTreeLeaf
             {
                 if (!Items[i].Position.Intersects(Region))
                 {
-                    //GameState.quadTree.AddItem(Items[i]);
                     Items.RemoveAt(i);
                 }
             }

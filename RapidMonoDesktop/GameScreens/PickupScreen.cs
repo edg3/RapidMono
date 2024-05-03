@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
+using RapidMono;
+using RapidMono.DataTypes;
+using RapidMono.Services;
 
 namespace RapidMonoDesktop.GameScreens;
 
-class PickupScreen : GameScreen
+class PickupScreen : IGameScreen
 {
     Texture2D smallTex;
     public int PickupType = 0;
@@ -16,8 +18,8 @@ class PickupScreen : GameScreen
 
     public override void Load()
     {
-        smallTex = Game.Content.Load<Texture2D>("blank");
-        LargeText = Game.Content.Load<SpriteFont>("Arial");
+        smallTex = Engine.Content.Load<Texture2D>("blank");
+        LargeText = Engine.Content.Load<SpriteFont>("Arial");
 
         drawRect = new Rectangle(50, 50, 700, 380);
 
@@ -108,19 +110,23 @@ class PickupScreen : GameScreen
 
     public override void Update()
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-            Game.PopPopUpScreen();
-
-        foreach (GestureSample gs in Game.gestureSamples)
-        {
-            if (gs.GestureType == GestureType.Tap)
-                Game.PopPopUpScreen();
-        }
+        if (Engine.Keyboard.KeyPress(Keys.Escape) || Engine.GamePad.BPressed(Controller.One) || Engine.GamePad.APressed(Controller.One))
+            Engine.Screen.PopPopupScreen();
     }
 
     public override void Draw()
     {
-        spriteBatch.Draw(smallTex, drawRect, Color.White);
-        spriteBatch.DrawString(LargeText, PickupInfo, new Vector2(drawRect.X, drawRect.Y), Color.LimeGreen);
+        Engine.SpriteBatch.Draw(smallTex, drawRect, Color.White);
+        Engine.SpriteBatch.DrawString(LargeText, PickupInfo + "\n\n<escape to close>", new Vector2(drawRect.X + 32, drawRect.Y + 32), Color.Black);
+    }
+
+    public override void OnPop()
+    {
+
+    }
+
+    public override void OnPush()
+    {
+
     }
 }

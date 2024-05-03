@@ -59,7 +59,7 @@ public class Enemy
     {
         Flock(enemies);
 
-        //ChaseEvade(enemies);
+        ChaseEvade(enemies);
 
         nextFire -= GameState.gameTime.ElapsedGameTime.Milliseconds;
         if (nextFire <= 0)
@@ -81,7 +81,7 @@ public class Enemy
     {
         foreach (Enemy e in enemies)
         {
-            Vector2 closest = new Vector2();
+            Vector2 closest = new();
             double d = 9999999;
             if (e.Colour != Colour)
             {
@@ -118,10 +118,10 @@ public class Enemy
 
     private void Flock(List<Enemy> enemies)
     {
-        Vector2 sep = separate(enemies);
-        Vector2 ali = align(enemies);
-        Vector2 coh = cohese(enemies);
-        Vector2 tar = target();
+        Vector2 sep = Separate(enemies);
+        Vector2 ali = Align(enemies);
+        Vector2 coh = Cohese(enemies);
+        Vector2 tar = Target();
 
         //weight forces
         sep *= 4.0f;
@@ -133,7 +133,7 @@ public class Enemy
 
     }
 
-    private Vector2 target()
+    private Vector2 Target()
     {
         Vector2 chase = new Vector2();
         float d = (float)MHelper.Vector2Distance(Position, GameState.PlayerPosition);
@@ -151,10 +151,10 @@ public class Enemy
         return chase;
     }
 
-    private Vector2 cohese(List<Enemy> enemies)
+    private Vector2 Cohese(List<Enemy> enemies)
     {
         float neighbourDistance = 1000f;
-        Vector2 sum = new Vector2();
+        Vector2 sum = new();
         int count = 0;
 
         for (int i = 0; i < enemies.Count; i++)
@@ -171,15 +171,15 @@ public class Enemy
         if (count > 0)
         {
             sum /= count;
-            return steer(sum, false);
+            return Steer(sum, false);
         }
         return sum;
     }
 
-    private Vector2 align(List<Enemy> enemies)
+    private Vector2 Align(List<Enemy> enemies)
     {
         float neighbourDist = 1000f;
-        Vector2 steer = new Vector2();
+        Vector2 steer = new();
         int count = 0;
 
         for (int i = 0; i < enemies.Count; i++)
@@ -212,10 +212,10 @@ public class Enemy
         return steer;
     }
 
-    private Vector2 separate(List<Enemy> enemies)
+    private Vector2 Separate(List<Enemy> enemies)
     {
         float desiredSeparation = 100f;
-        Vector2 steer = new Vector2();
+        Vector2 steer = new();
         int count = 0;
         for (int i = 0; i < enemies.Count; i++)
         {
@@ -249,19 +249,19 @@ public class Enemy
         return steer;
     }
 
-    public void seek(Vector2 target)
+    public void Seek(Vector2 target)
     {
-        acc += steer(target, false);
+        acc += Steer(target, false);
     }
 
-    private void arrive(Vector2 target)
+    private void Arrive(Vector2 target)
     {
-        acc += steer(target, true);
+        acc += Steer(target, true);
     }
 
-    private Vector2 steer(Vector2 target, bool slowDown) //steer towards a target
+    private Vector2 Steer(Vector2 target, bool slowDown) //steer towards a target
     {
-        Vector2 steer = new Vector2();
+        Vector2 steer = new();
         Vector2 desired = target - loc;
         float d = desired.Length();
 

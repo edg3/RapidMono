@@ -12,19 +12,14 @@ public class KeyboardService : IRapidService
     //keyboardHandler.add(Keys.A);
     private List<Keys> LengthCheckedKeys = new List<Keys>();
 
-
-
     public override void Load()
     {
-
         CurrentState = Keyboard.GetState();
         PreviousState = Keyboard.GetState();
-
     }
 
     public override void Update()
     {
-
         PreviousState = CurrentState;
         CurrentState = Keyboard.GetState();
 
@@ -44,7 +39,6 @@ public class KeyboardService : IRapidService
                 PressLengths[LengthCheckedKeys[i]] = 0.0f;
             }
         }
-
     }
 
     public override void Draw()
@@ -59,9 +53,7 @@ public class KeyboardService : IRapidService
     /// <returns></returns>
     public bool KeyPress(Keys k)
     {
-
         return ((CurrentState.IsKeyDown(k)) && (!PreviousState.IsKeyDown(k)));
-
     }
 
     /// <summary>
@@ -71,12 +63,7 @@ public class KeyboardService : IRapidService
     /// <returns></returns>
     public bool KeyHeld(Keys k)
     {
-
         return ((CurrentState.IsKeyDown(k)) && (PreviousState.IsKeyDown(k)));
-
-
-
-
     }
 
     /// <summary>
@@ -86,9 +73,7 @@ public class KeyboardService : IRapidService
     /// <returns></returns>
     public bool KeyLeft(Keys k)
     {
-
         return ((!CurrentState.IsKeyDown(k)) && (PreviousState.IsKeyDown(k)));
-
     }
 
     /// <summary>
@@ -97,14 +82,12 @@ public class KeyboardService : IRapidService
     /// <param name="k">The key to check</param>
     public void AddKey(Keys k)
     {
-
         if (!LengthCheckedKeys.Contains(k))
         {
             PressLengths.Add(k, 0.0f);
             ReleasedLength.Add(k, 0.0f);
             LengthCheckedKeys.Add(k);
         }
-
     }
 
     /// <summary>
@@ -114,7 +97,6 @@ public class KeyboardService : IRapidService
     /// <returns></returns>
     public float HeldFor(Keys k)
     {
-
         if (PressLengths.ContainsKey(k))
         {
             return PressLengths[k];
@@ -129,7 +111,6 @@ public class KeyboardService : IRapidService
     /// <returns></returns>
     public float ReleasedTime(Keys k)
     {
-
         if (ReleasedLength.ContainsKey(k))
         {
             return ReleasedLength[k];

@@ -19,6 +19,7 @@ static class ScoresData
     public static void CreateDatabase()
     {
         if (_db is null) _db = new ScoreDB();
+        _db.Database.EnsureCreated();
     }
 
     public static void AddScore(ScoreItem score)

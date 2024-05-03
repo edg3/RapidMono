@@ -37,7 +37,7 @@ public class MouseService : IRapidService
     public Vector2 Position()
     {
 #if XBOX
-            return Vector2.Zero;
+        return Vector2.Zero;
 #else
         return new Vector2(currentState.X, currentState.Y);
 #endif
@@ -46,7 +46,7 @@ public class MouseService : IRapidService
     public bool LeftPressed()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((currentState.LeftButton == ButtonState.Pressed) && (previousState.LeftButton == ButtonState.Released));
 #endif
@@ -54,7 +54,7 @@ public class MouseService : IRapidService
     public bool LeftReleased()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((previousState.LeftButton == ButtonState.Pressed) && (currentState.LeftButton == ButtonState.Released));
 #endif
@@ -62,7 +62,7 @@ public class MouseService : IRapidService
     public bool LeftHeld()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((previousState.LeftButton == ButtonState.Pressed) && (currentState.LeftButton == ButtonState.Pressed));
 #endif
@@ -71,7 +71,7 @@ public class MouseService : IRapidService
     public bool MiddlePressed()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((currentState.MiddleButton == ButtonState.Pressed) && (previousState.MiddleButton == ButtonState.Released));
 #endif
@@ -79,7 +79,7 @@ public class MouseService : IRapidService
     public bool MiddleReleased()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((previousState.MiddleButton == ButtonState.Pressed) && (currentState.MiddleButton == ButtonState.Released));
 #endif
@@ -87,7 +87,7 @@ public class MouseService : IRapidService
     public bool MiddleHeld()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((previousState.MiddleButton == ButtonState.Pressed) && (currentState.MiddleButton == ButtonState.Pressed));
 #endif
@@ -96,7 +96,7 @@ public class MouseService : IRapidService
     public bool RightPressed()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((currentState.RightButton == ButtonState.Pressed) && (previousState.RightButton == ButtonState.Released));
 #endif
@@ -104,7 +104,7 @@ public class MouseService : IRapidService
     public bool RightReleased()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((previousState.RightButton == ButtonState.Pressed) && (currentState.RightButton == ButtonState.Released));
 #endif
@@ -112,7 +112,7 @@ public class MouseService : IRapidService
     public bool RightHeld()
     {
 #if XBOX
-            return false;
+        return false;
 #else
         return ((previousState.RightButton == ButtonState.Pressed) && (currentState.RightButton == ButtonState.Pressed));
 #endif
@@ -121,7 +121,7 @@ public class MouseService : IRapidService
     public int ScrollWheel
     {
 #if XBOX
-            get { return 0; }
+        get { return 0; }
 #else
         get { return currentState.ScrollWheelValue; }
 #endif

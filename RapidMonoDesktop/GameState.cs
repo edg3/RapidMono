@@ -1,5 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using RapidMono;
+using RapidMono.Services;
 using RapidMonoDesktop.GameScreens;
 using RapidMonoDesktop.Helpers;
 using RapidMonoDesktop.SamplesCode;
@@ -42,7 +45,7 @@ public static class GameState
 
     static void Game_Deactivated(object sender, EventArgs e)
     {
-        //SAVE GAME STATE
+        // TODO: SAVE GAME STATE
     }
 
     public static IsolatedStorageFile isoFiles;
@@ -68,17 +71,43 @@ public static class GameState
         }
 
         #region PLAYER_UPDATE
-
         float new_direction = 0;
         bool have_new_direction = false;
-        foreach (GestureSample gs in Game.gestureSamples)
+        if (Engine.Mouse.LeftPressed() || Engine.Mouse.LeftHeld())
         {
-            if (gs.GestureType == GestureType.Tap || gs.GestureType == GestureType.FreeDrag)
-            {
-                new_direction = (float)Math.Atan2((gs.Position.Y - 240), (gs.Position.X - 400));
-                have_new_direction = true;
-            }
+            have_new_direction = true;
+            new_direction = (float)Math.Atan2(Engine.Mouse.Position().Y - 240, Engine.Mouse.Position().X - 400);
         }
+        else if (Engine.Keyboard.KeyPress(Keys.W) || Engine.Keyboard.KeyHeld(Keys.W) 
+              || Engine.Keyboard.KeyPress(Keys.Up) || Engine.Keyboard.KeyHeld(Keys.Up))
+        {
+            have_new_direction = true;
+            new_direction = -MathHelper.PiOver2;
+        }
+        else if (Engine.Keyboard.KeyPress(Keys.A) || Engine.Keyboard.KeyHeld(Keys.A) 
+              || Engine.Keyboard.KeyPress(Keys.Left) || Engine.Keyboard.KeyHeld(Keys.Left))
+        {
+            have_new_direction = true;
+            new_direction = -2 * MathHelper.PiOver2;
+        }
+        else if (Engine.Keyboard.KeyPress(Keys.S) || Engine.Keyboard.KeyHeld(Keys.S) 
+              || Engine.Keyboard.KeyPress(Keys.Down) || Engine.Keyboard.KeyHeld(Keys.Down))
+        {
+            have_new_direction = true;
+            new_direction = MathHelper.PiOver2;
+        }
+        else if (Engine.Keyboard.KeyPress(Keys.D) || Engine.Keyboard.KeyHeld(Keys.D)
+              || Engine.Keyboard.KeyPress(Keys.Right) || Engine.Keyboard.KeyHeld(Keys.Right))
+        {
+            have_new_direction = true;
+            new_direction = 0;
+        }
+        else if (Engine.GamePad.LeftStick(Controller.One).Length() > 0.1f)
+        {
+            have_new_direction = true;
+            new_direction = (float)Math.Atan2(-Engine.GamePad.LeftStick(Controller.One).Y, Engine.GamePad.LeftStick(Controller.One).X);
+        }
+        
         if (have_new_direction)
         {
             target_direction = new_direction;
@@ -99,7 +128,6 @@ public static class GameState
                 }
             }
         }
-
         #endregion
 
         #region BULLET_UPDATE
@@ -145,7 +173,7 @@ public static class GameState
                 PickupScreen ps = new PickupScreen();
                 ps.PickupType = Pickups[i - 1].WhatAmI;
                 Pickups.RemoveAt(i - 1);
-                Game.PushPopUpScreen(ps);
+                Engine.Screen.PushPopupScreen(ps);
             }
         }
         #endregion
@@ -194,7 +222,7 @@ public static class GameState
         foreach (Enemy e in Enemies)
         {
             e.Run(Enemies);
-            e.seek(PlayerPosition);
+            e.Seek(PlayerPosition);
         }
         #endregion
     }

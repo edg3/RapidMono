@@ -1,38 +1,40 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
+using RapidMono;
+using RapidMono.DataTypes;
+using RapidMono.Services;
 using System;
 using System.Collections.Generic;
 
 namespace RapidMonoDesktop.GameScreens;
 
-class GameOver : GameScreen
+class GameOver : IGameScreen
 {
     Texture2D smallStar, mediumStar, largeStar;
-    List<StarColor> smallStars = new List<StarColor>(),
-                    mediumStars = new List<StarColor>(),
-                    largeStars = new List<StarColor>();
+    List<StarColor> smallStars = new(),
+                    mediumStars = new(),
+                    largeStars = new();
     SpriteFont Font;
 
-    Rectangle logoPos = new Rectangle(400, 40, 400, 400);
+    Rectangle logoPos = new(400, 40, 400, 400);
     Texture2D texLogo;
 
-    Vector2 menuHelperPos = new Vector2(100, 190);
+    Vector2 menuHelperPos = new(100, 190);
 
-    Random random = new Random();
+    Random random = new();
 
     public int ScoreGained = 0;
 
     public override void Load()
     {
-        Font = Game.Content.Load<SpriteFont>("Arial");
+        Font = Engine.Content.Load<SpriteFont>("Arial");
 
-        smallStar = Game.Content.Load<Texture2D>("Star_Small");
-        mediumStar = Game.Content.Load<Texture2D>("Star_Medium");
-        largeStar = Game.Content.Load<Texture2D>("Star_Large");
+        smallStar = Engine.Content.Load<Texture2D>("Star_Small");
+        mediumStar = Engine.Content.Load<Texture2D>("Star_Medium");
+        largeStar = Engine.Content.Load<Texture2D>("Star_Large");
 
-        texLogo = Game.Content.Load<Texture2D>("Menu_Logo");
+        texLogo = Engine.Content.Load<Texture2D>("MenuLogo");
 
         for (int i = 0; i < 40; i++)
             smallStars.Add(new StarColor(random.Next(800), random.Next(480), new Color(random.Next(0, 255), 0, random.Next(0, 255))));
@@ -78,38 +80,36 @@ class GameOver : GameScreen
             }
         }
 
-        bool closing = false;
-        foreach (GestureSample gs in Game.gestureSamples)
-        {
-            if (gs.GestureType == GestureType.DoubleTap)
-            {
-                closing = true;
-                Game.PopGameScreen();
-            }
-        }
-
-        if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) && (!closing))
-            Game.PopGameScreen();
+        if (Engine.Keyboard.KeyPress(Keys.Escape) || Engine.GamePad.BPressed(Controller.One))
+            Engine.Screen.PopScreen();
     }
 
     public override void Draw()
     {
         foreach (StarColor sc in smallStars)
         {
-            spriteBatch.Draw(smallStar, sc.Pos, sc.Colour);
+            Engine.SpriteBatch.Draw(smallStar, sc.Pos, sc.Colour);
         }
         foreach (StarColor sc in mediumStars)
         {
-            spriteBatch.Draw(mediumStar, sc.Pos, sc.Colour);
+            Engine.SpriteBatch.Draw(mediumStar, sc.Pos, sc.Colour);
         }
         foreach (StarColor sc in largeStars)
         {
-            spriteBatch.Draw(largeStar, sc.Pos, sc.Colour);
+            Engine.SpriteBatch.Draw(largeStar, sc.Pos, sc.Colour);
         }
 
-        spriteBatch.DrawString(Font, "Game Over!\nScore: " + ScoreGained.ToString(), menuHelperPos, Color.White);
+        Engine.SpriteBatch.DrawString(Font, "Game Over!\nScore: " + ScoreGained.ToString() + "\n\n\n<escape to menu>", menuHelperPos, Color.White);
+        Engine.SpriteBatch.Draw(texLogo, logoPos, Color.White);
+    }
 
-        spriteBatch.Draw(texLogo, logoPos, Color.White);
+    public override void OnPop()
+    {
+
+    }
+
+    public override void OnPush()
+    {
 
     }
 }

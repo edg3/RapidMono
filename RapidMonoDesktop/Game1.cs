@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using RapidMono;
 using RapidMonoDesktop.GameScreens;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,15 @@ namespace RapidMonoDesktop;
 
 public class Game1 : Microsoft.Xna.Framework.Game
 {
-    GraphicsDeviceManager graphics;
-    SpriteBatch spriteBatch;
+    private RapidEngine _rapidEngine;
+    private GraphicsDeviceManager _graphics;
 
     //Input
     public List<GestureSample> gestureSamples = new List<GestureSample>();
 
     public Game1()
     {
-        graphics = new GraphicsDeviceManager(this);
+        _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
 
         TargetElapsedTime = TimeSpan.FromTicks(333333);
@@ -27,7 +28,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         ScoresData.CreateDatabase();
     }
-
 
     protected override void Initialize()
     {
@@ -38,15 +38,12 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void LoadContent()
     {
-        spriteBatch = new SpriteBatch(GraphicsDevice);
-
         GameState.SetGame(this);
+        _rapidEngine = new RapidEngine(this, _graphics.GraphicsDevice, Content);
+        Engine.Screen.PushScreen(new Menu());
     }
 
-    protected override void UnloadContent()
-    {
-
-    }
+    protected override void UnloadContent() { }
 
     protected override void Update(GameTime gameTime)
     {
@@ -59,84 +56,15 @@ public class Game1 : Microsoft.Xna.Framework.Game
             gestureSamples.Add(gs);
         }
 
-        if (gameScreens.Count == 0)
-            PushGameScreen(new Menu());
-
-        if (popUpScreens.Count > 0)
-        {
-            popUpScreens[popUpScreens.Count - 1].gameTime = gameTime;
-            popUpScreens[popUpScreens.Count - 1].Update();
-        }
-        else
-        {
-            if (gameScreens.Count > 0)
-            {
-                gameScreens[gameScreens.Count - 1].gameTime = gameTime;
-                gameScreens[gameScreens.Count - 1].Update();
-            }
-        }
-
+        _rapidEngine.Update(gameTime);
 
         base.Update(gameTime);
     }
 
-    private List<GameScreen> gameScreens = new List<GameScreen>()
-                            , popUpScreens = new List<GameScreen>();
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Black);
-
-        spriteBatch.Begin();
-        if (gameScreens.Count > 0)
-        {
-            gameScreens[gameScreens.Count - 1].gameTime = gameTime;
-            gameScreens[gameScreens.Count - 1].Draw();
-        }
-        foreach (GameScreen popUp in popUpScreens)
-        {
-            popUp.gameTime = gameTime;
-            popUp.Draw();
-        }
-        spriteBatch.End();
+        _rapidEngine.Draw(gameTime, Color.Black);
 
         base.Draw(gameTime);
-    }
-
-    public void PushGameScreen(GameScreen gs)
-    {
-        gs.Game = this;
-        gs.spriteBatch = spriteBatch;
-        gs.Load();
-        gameScreens.Add(gs);
-    }
-
-    public void PopGameScreen()
-    {
-        if (gameScreens.Count > 0)
-        {
-            gameScreens[gameScreens.Count - 1].gameTime = null;
-            gameScreens[gameScreens.Count - 1].Game = null;
-            gameScreens[gameScreens.Count - 1].spriteBatch = null;
-            gameScreens.RemoveAt(gameScreens.Count - 1);
-        }
-    }
-
-    public void PushPopUpScreen(GameScreen gs)
-    {
-        gs.Game = this;
-        gs.spriteBatch = spriteBatch;
-        gs.Load();
-        popUpScreens.Add(gs);
-    }
-
-    public void PopPopUpScreen()
-    {
-        if (popUpScreens.Count > 0)
-        {
-            popUpScreens[popUpScreens.Count - 1].gameTime = null;
-            popUpScreens[popUpScreens.Count - 1].Game = null;
-            popUpScreens[popUpScreens.Count - 1].spriteBatch = null;
-            popUpScreens.RemoveAt(popUpScreens.Count - 1);
-        }
     }
 }

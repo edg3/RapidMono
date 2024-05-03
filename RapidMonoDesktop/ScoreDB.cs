@@ -6,13 +6,13 @@ namespace RapidMono;
 public class ScoreDB : DbContext
 {
     public static ScoreDB I { get; private set; }
-    public ScoreDB()
+    public ScoreDB() : base()
     {
         if (I is not null) throw new System.Exception("ScoreDB already exists");
         I = this;
     }
 
-    private const string ConnectionString = "Data Source=ScoreDB.db";
+    private const string ConnectionString = "Data Source=./ScoreDB.db";
     public DbSet<ScoreItem> ScoreItems { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

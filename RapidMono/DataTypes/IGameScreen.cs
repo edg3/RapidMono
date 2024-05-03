@@ -2,7 +2,6 @@
 
 public abstract class IGameScreen
 {
-    public RapidEngine Engine;
     private bool _IsLoaded = false;
     public bool IsLoaded { get { return _IsLoaded; } }
 
@@ -21,10 +20,10 @@ public abstract class IGameScreen
         _IsLoaded = true;
     }
 
+    #region Overrideable Functions
     /// <summary>
     /// All functions needed for the GameScreen to function
     /// </summary>
-    #region Overrideable Functions
     public abstract void Load();
     public abstract void Update();
     public abstract void Draw();
@@ -33,5 +32,7 @@ public abstract class IGameScreen
     /// Allows you to do cleaning up when the screen is removed from the stack.
     /// </summary>
     public abstract void OnPop();
+
+    public abstract void OnPush();
     #endregion
 }
