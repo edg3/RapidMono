@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RapidMonoDesktop.GameScreens;
 using RapidMonoDesktop.Helpers;
 using System;
 using System.Collections.Generic;
 
-namespace RapidMonoDesktop.GameScreens;
+namespace RapidMonoDesktop;
 
 class StarColor
 {
@@ -22,7 +23,7 @@ class InGame : GameScreen
 {
 
     Texture2D texShip, texIndicator, texBullet, texLife, texPickup;
-    SpriteFont MediumFont;
+    SpriteFont Font;
 
     //Stars
     Texture2D smallStar, mediumStar, largeStar;
@@ -41,17 +42,17 @@ class InGame : GameScreen
 
     public override void Load()
     {
-        texShip = Game.Content.Load<Texture2D>("Sprites/Ship");
-        texIndicator = Game.Content.Load<Texture2D>("Sprites/Indicator");
-        texBullet = Game.Content.Load<Texture2D>("Sprites/Bullet");
-        texLife = Game.Content.Load<Texture2D>("Sprites/Life");
-        texPickup = Game.Content.Load<Texture2D>("Sprites/Pickup");
+        texShip = Game.Content.Load<Texture2D>("Ship");
+        texIndicator = Game.Content.Load<Texture2D>("Indicator");
+        texBullet = Game.Content.Load<Texture2D>("Bullet");
+        texLife = Game.Content.Load<Texture2D>("Heart");
+        texPickup = Game.Content.Load<Texture2D>("Pickup");
 
-        MediumFont = Game.Content.Load<SpriteFont>("Fonts/SegeoMedium");
+        Font = Game.Content.Load<SpriteFont>("Arial");
 
-        smallStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star1");
-        mediumStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star2");
-        largeStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star3");
+        smallStar = Game.Content.Load<Texture2D>("Star_Small");
+        mediumStar = Game.Content.Load<Texture2D>("Star_Medium");
+        largeStar = Game.Content.Load<Texture2D>("Star_Large");
 
         for (int i = 0; i < 200; i++)
             smallStars.Add(new StarColor(random.Next(-600, 600), random.Next(-600, 600), new Color(random.Next(0, 255), 0, random.Next(0, 255))));
@@ -185,7 +186,7 @@ class InGame : GameScreen
         }
 
         //draw score
-        spriteBatch.DrawString(MediumFont, "Score: " + GameState.PlayerScore.ToString(), Vector2.Zero, Color.White);
+        spriteBatch.DrawString(Font, "Score: " + GameState.PlayerScore.ToString(), Vector2.Zero, Color.White);
     }
 
 }

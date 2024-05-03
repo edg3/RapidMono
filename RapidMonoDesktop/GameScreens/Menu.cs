@@ -1,5 +1,4 @@
-﻿using LocalDB;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -15,7 +14,7 @@ class Menu : GameScreen
     Vector2 menuHelperPos = new Vector2(100, 440);
     int selectedItem = 0;
 
-    SpriteFont MediumFont, SmallFont, LargeFont;
+    SpriteFont Font;
 
     Rectangle logoPos = new Rectangle(400, 40, 400, 400);
     Texture2D texLogo;
@@ -40,25 +39,20 @@ class Menu : GameScreen
 
         menuOptions.Add("Quit");
         menuHelpers.Add("Exit the game. [Double tap to select]");
-
-
     }
 
 
     Random random = new Random();
-    IList<Score> myScores;
+    IList<ScoreItem> myScores;
     public override void Load()
     {
-        // TODO: add in these content items
-        SmallFont = Game.Content.Load<SpriteFont>("Fonts/SegeoSmall");
-        MediumFont = Game.Content.Load<SpriteFont>("Fonts/SegeoMedium");
-        LargeFont = Game.Content.Load<SpriteFont>("Fonts/SegeoLarge");
+        Font = Game.Content.Load<SpriteFont>("Arial");
 
-        texLogo = Game.Content.Load<Texture2D>("Sprites/MenuArt");
+        texLogo = Game.Content.Load<Texture2D>("MenuLogo");
 
-        smallStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star1");
-        mediumStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star2");
-        largeStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star3");
+        smallStar = Game.Content.Load<Texture2D>("Star_Small");
+        mediumStar = Game.Content.Load<Texture2D>("Star_Medium");
+        largeStar = Game.Content.Load<Texture2D>("Star_Large");
 
         for (int i = 0; i < 40; i++)
             smallStars.Add(new StarColor(random.Next(800), random.Next(480), new Color(random.Next(0, 255), 0, random.Next(0, 255))));
@@ -186,21 +180,21 @@ class Menu : GameScreen
             pos2.Y = pos.Y + OffSet;
             if (Math.Abs(selectedItem - i) > 1)
             {
-                spriteBatch.DrawString(SmallFont, menuOptions[(i + menuOptions.Count) % menuOptions.Count], pos2, smallColor);
+                spriteBatch.DrawString(Font, menuOptions[(i + menuOptions.Count) % menuOptions.Count], pos2, smallColor);
             }
             else if (Math.Abs(selectedItem - i) == 1)
             {
-                spriteBatch.DrawString(MediumFont, menuOptions[(i + menuOptions.Count) % menuOptions.Count], pos2, mediumColor);
+                spriteBatch.DrawString(Font, menuOptions[(i + menuOptions.Count) % menuOptions.Count], pos2, mediumColor);
                 pos.Y += 4;
             }
             else
             {
-                spriteBatch.DrawString(LargeFont, menuOptions[(i + menuOptions.Count) % menuOptions.Count], pos2, largeColor);
+                spriteBatch.DrawString(Font, menuOptions[(i + menuOptions.Count) % menuOptions.Count], pos2, largeColor);
                 pos.Y += 8;
             }
         }
 
-        spriteBatch.DrawString(MediumFont, menuHelpers[selectedItem], menuHelperPos, mediumColor);
+        spriteBatch.DrawString(Font, menuHelpers[selectedItem], menuHelperPos, mediumColor);
 
         if (menuOptions[selectedItem] != "Local Scores")
         {
@@ -215,7 +209,7 @@ class Menu : GameScreen
                 for (int i = 0; (i < myScores.Count) && (i < 5); i++)
                 {
                     v2_helper.Y += 20;
-                    spriteBatch.DrawString(MediumFont, myScores[i].When.ToShortDateString() + " - " + myScores[i].Score1.ToString(), v2_helper, Color.White);
+                    spriteBatch.DrawString(Font, $"{myScores[i].Date.ToShortDateString()} - {myScores[i].Score}", v2_helper, Color.White);
                 }
             }
         }

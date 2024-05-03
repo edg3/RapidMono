@@ -13,7 +13,7 @@ class GameOver : GameScreen
     List<StarColor> smallStars = new List<StarColor>(),
                     mediumStars = new List<StarColor>(),
                     largeStars = new List<StarColor>();
-    SpriteFont MediumFont;
+    SpriteFont Font;
 
     Rectangle logoPos = new Rectangle(400, 40, 400, 400);
     Texture2D texLogo;
@@ -26,13 +26,13 @@ class GameOver : GameScreen
 
     public override void Load()
     {
-        MediumFont = Game.Content.Load<SpriteFont>("Fonts/SegeoMedium");
+        Font = Game.Content.Load<SpriteFont>("Arial");
 
-        smallStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star1");
-        mediumStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star2");
-        largeStar = Game.Content.Load<Texture2D>("Sprites/Stars/Star3");
+        smallStar = Game.Content.Load<Texture2D>("Star_Small");
+        mediumStar = Game.Content.Load<Texture2D>("Star_Medium");
+        largeStar = Game.Content.Load<Texture2D>("Star_Large");
 
-        texLogo = Game.Content.Load<Texture2D>("Sprites/MenuArt");
+        texLogo = Game.Content.Load<Texture2D>("Menu_Logo");
 
         for (int i = 0; i < 40; i++)
             smallStars.Add(new StarColor(random.Next(800), random.Next(480), new Color(random.Next(0, 255), 0, random.Next(0, 255))));
@@ -41,9 +41,10 @@ class GameOver : GameScreen
         for (int i = 0; i < 10; i++)
             largeStars.Add(new StarColor(random.Next(800), random.Next(480), new Color(random.Next(175, 255), random.Next(175, 255), 0)));
 
-        LocalDB.Score s = new LocalDB.Score();
-        s.When = DateTime.Now;
-        s.Score1 = ScoreGained;
+        ScoreItem s = new()
+        {
+            Score = ScoreGained
+        };
         ScoresData.AddScore(s);
     }
 
@@ -106,7 +107,7 @@ class GameOver : GameScreen
             spriteBatch.Draw(largeStar, sc.Pos, sc.Colour);
         }
 
-        spriteBatch.DrawString(MediumFont, "Game Over!\nScore: " + ScoreGained.ToString(), menuHelperPos, Color.White);
+        spriteBatch.DrawString(Font, "Game Over!\nScore: " + ScoreGained.ToString(), menuHelperPos, Color.White);
 
         spriteBatch.Draw(texLogo, logoPos, Color.White);
 

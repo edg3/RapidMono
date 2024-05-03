@@ -1,49 +1,40 @@
-﻿using LocalDB;
+﻿using RapidMono;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RapidMonoDesktop;
 
-class ScoreItem
+public class ScoreItem
 {
-    public DateTime Date;
-    public int Score = 0;
+    public int ID { get; set; }
+    public DateTime Date { get; set; } = DateTime.Now;
+    public int Score { get; set; } = 0;
 }
 static class ScoresData
 {
     public static List<ScoreItem> Scores;
-    private const string ConnectionString = @"C:\Work\Databases\Game1.sdf";
+    private static ScoreDB _db;
 
     public static void CreateDatabase()
     {
-        using (var context = new ScoresDataContext(ConnectionString))
-        {
-            if (!context.DatabaseExists())
-            {
-                context.CreateDatabase();
-            }
-        }
+        if (_db is null) _db = new ScoreDB();
     }
 
-    public static void AddScore(Score score)
+    public static void AddScore(ScoreItem score)
     {
-        using (var context = new ScoresDataContext(ConnectionString))
-        {
-            if (context.DatabaseExists())
-            {
-                //context.Scores.InsertOnSubmit(score);
-                //context.SubmitChanges();
-            }
-        }
+        _db.ScoreItems.Add(score);
+        _db.SaveChanges();
     }
 
-    public static IList<Score> GetScores()
+    public static IList<ScoreItem> GetScores()
     {
-        IList<Score> scores = new List<Score>();
-        using (var context = new ScoresDataContext(ConnectionString))
-        {
-            //scores = (from sco in context.Scores select sco).ToList();
-        }
+        IList<ScoreItem> scores = new List<ScoreItem>();
+        _db.ScoreItems.Where(s => s.Score > 0)
+            .OrderByDescending(s => s.Score)
+            .Take(10)
+            .ToList()
+            .ForEach(s => scores.Add(s));
 
         return scores;
     }

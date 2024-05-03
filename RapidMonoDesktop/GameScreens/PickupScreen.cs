@@ -17,7 +17,7 @@ class PickupScreen : GameScreen
     public override void Load()
     {
         smallTex = Game.Content.Load<Texture2D>("blank");
-        LargeText = Game.Content.Load<SpriteFont>("Fonts/SegeoLarge");
+        LargeText = Game.Content.Load<SpriteFont>("Arial");
 
         drawRect = new Rectangle(50, 50, 700, 380);
 
