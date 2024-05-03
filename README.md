@@ -15,3 +15,6 @@ Originally built Jan 31 2013, under no explicit license, I wanted a nice way to 
 - Forked: https://github.com/TRex22/RapidGame - under MIT license
 - Revamped RapidMono: edg3/RapidMono - under MIT license
 - Revamped Fragmented Space: edg3/RapidMono/RapidMono<Platform>, where Platform is in (Desktop) at current state, Copyright (c) 2013-Present Ernest "edg3" L, All Rights Reserved; intended to show off RapidMono in action
+
+# Posts:
+- 2024/05/03: https://www.edg3.co.za/2024/05/03/rapidmono-an-assistant-for-monogame-gamedev/
