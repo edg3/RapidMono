@@ -34,5 +34,4 @@ public static class Engine
     public static GraphicsDevice GraphicsDevice => _Instance?.GraphicsDevice ?? throw new System.Exception("GraphicsDevice not found");
     public static ContentManager Content => _Instance?.Content ?? throw new System.Exception("ContentManager not found");
     public static SpriteBatch SpriteBatch => _Instance?.SpriteBatch ?? throw new System.Exception("SpriteBatch not found");
-
 }

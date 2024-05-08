@@ -8,19 +8,27 @@ namespace RapidMono;
 
 public class RapidEngine
 {
-    public RapidEngine(Game game1, GraphicsDevice graphicsDevice, ContentManager contentManager)
+    private GraphicsDeviceManager _graphics;
+    public RapidEngine(Game game1, GraphicsDeviceManager graphicsDeviceManager, ContentManager contentManager, uint width, uint height, bool fullScreen)
     {
+        _graphics = graphicsDeviceManager;
+
         AddService(new ScreenService(), false);
-        AddService(new ScreenshotService(graphicsDevice), false);
+        AddService(new ScreenshotService(_graphics.GraphicsDevice), false);
         AddService(new KeyboardService(), false);
         AddService(new MouseService(), false);
         AddService(new GamePadService(), false);
 
-        _GraphicsDevice = graphicsDevice;
+        _GraphicsDevice = graphicsDeviceManager.GraphicsDevice;
         _ContentManager = contentManager;
         _SpriteBatch = new SpriteBatch(_GraphicsDevice);
 
         _Game = game1;
+
+        _graphics.IsFullScreen = fullScreen;
+        _graphics.PreferredBackBufferWidth = (int)width;
+        _graphics.PreferredBackBufferHeight = (int)height;
+        _graphics.ApplyChanges();
 
         _RenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
