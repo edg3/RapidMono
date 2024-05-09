@@ -6,6 +6,12 @@ using RapidMono.Services;
 
 namespace RapidMono;
 
+/*
+ * To Do:
+ *  - Make the game state content memory handler
+ *  - Make events groups, e.g. 'Register(new { Event.KeyUp_A, Event.KEyUp_Left, Event.Gamepad_LeftPressed }, () => { /.. points to function in game state LeftPressed ../ });', on an EventManager
+ *  - Make custom user event groups, e.g. 'Collission(typeof(X),typeof(Y), () => { /.. points to function in game state Collission ../ });', on an EventManager
+ */
 public class RapidEngine
 {
     private GraphicsDeviceManager _graphics;
